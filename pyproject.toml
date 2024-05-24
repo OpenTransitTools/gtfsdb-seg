@@ -5,16 +5,13 @@ description = "generate segment tables for stops, routes, route-stops"
 authors = ["Frank Purcell <fxpurcell@gmail.com>"]
 license = "Mozella 2.x"
 readme = "README.md"
-packages = [{include = "gtfsdb-seg"}]
+packages = [{include = "gtfsdb_seg"}]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-"gtfsdb" = {git = "https://github.com/OpenTransitTools/gtfsdb.git", branch = "rtp"}
-# "ott.utils" = { path = "../utils/", develop = true }
+# "gtfsdb" = {git = "https://github.com/OpenTransitTools/gtfsdb.git", branch = "rtp"}
+"gtfsdb" = { path = "../gtfsdb/", develop = true }
+"ott.utils" = { path = "../utils/", develop = true }
 
 [tool.poetry.scripts]
-segment = "ott.convert.yaml2json.convert:yml_to_json"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+segment = "gtfsdb_seg.loader:main"
