@@ -9,9 +9,11 @@ packages = [{include = "gtfsdb_seg"}]
 
 [tool.poetry.dependencies]
 python = "^3.6"
+psycopg2-binary = "*"
 # "gtfsdb" = {git = "https://github.com/OpenTransitTools/gtfsdb.git", branch = "rtp"}
 "gtfsdb" = { path = "../gtfsdb/", develop = true }
 "ott.utils" = { path = "../utils/", develop = true }
 
 [tool.poetry.scripts]
 segment = "gtfsdb_seg.loader:main"
+stop_segment = "gtfsdb_seg.loader:stop_segment"

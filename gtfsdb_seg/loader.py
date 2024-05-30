@@ -30,7 +30,7 @@ def load_gtfs_data(cmd_name='bin/load_gtfs_data'):
     complete load: will load gtfs and then do stop segmentation, etc...
     bin/load-gtfs-n-segment -c -g -s tm -d postgres://localhost/ott https://developer.trimet.org/schedule/gtfs.zip
     """
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     from gtfsdb.scripts import get_args
     from gtfsdb.api import database_load
 
@@ -49,8 +49,6 @@ def load_gtfs_data(cmd_name='bin/load_gtfs_data'):
     else:
         session = Database.make_session(args.database_url, args.schema, args.is_geospatial)
 
-    # step 3: speed data ....
-    pass # TODO
 
     # step 4: output geojson for map
     geojson = StopSegment.to_geojson(session)
@@ -69,6 +67,16 @@ def segments_to_geojson():
     session = Database.make_session(url, schema, is_geospatial=True)
     geojson = StopSegment.to_geojson(session)
     print(geojson)
+
+
+def stop_segment():
+    from gtfsdb.scripts import get_args
+    args, kwargs = get_args()
+
+    session = Database.make_session(args.database_url, args.schema, args.is_geospatial, create_db=True)
+    StopSegment.load(session)
+    session.commit()
+    session.flush()
 
 
 def main():
