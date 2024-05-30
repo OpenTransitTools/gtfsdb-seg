@@ -59,7 +59,6 @@ class Database(object):
 
     @schema.setter
     def schema(self, val):
-        # import pdb; pdb.set_trace()
         self._schema = val
         try:
             if self._schema and len(self._schema) > 0:
@@ -69,13 +68,13 @@ class Database(object):
         except Exception as e:
             log.info("NOTE: couldn't create schema {0} (schema might already exist)\n{1}".format(self._schema, e))
 
-    def _make_session_class(self, extension=None):
+    def _make_session_class(self):
         """
         this makes the Session() class ... the extension is for things like
         :see http://docs.sqlalchemy.org/en/latest/orm/contextual.html?highlight=scoped%20session :
         :see https://www.programcreek.com/python/example/97518/zope.sqlalchemy.ZopeTransactionExtension :
         """
-        self.session_factory = sessionmaker(bind=self.engine, extension=extension)
+        self.session_factory = sessionmaker(bind=self.engine)
         self.Session = scoped_session(self.session_factory)
 
     @property
@@ -89,6 +88,7 @@ class Database(object):
         from .stop_segment import StopSegment
         from .stop_segment_trip import StopSegmentTrip
 
+        #import pdb; pdb.set_trace()
         if cls.db_singleton is None:
             cls.db_singleton = Database(url, schema, is_geospatial)
             if create_db:
