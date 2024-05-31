@@ -68,7 +68,7 @@ class Database(object):
         except Exception as e:
             log.info("NOTE: couldn't create schema {0} (schema might already exist)\n{1}".format(self._schema, e))
 
-    def _make_session_class(self):
+    def _make_session_class(self, extension=None):
         """
         this makes the Session() class ... the extension is for things like
         :see http://docs.sqlalchemy.org/en/latest/orm/contextual.html?highlight=scoped%20session :
@@ -85,8 +85,8 @@ class Database(object):
     @classmethod
     def make_session(cls, url, schema, is_geospatial=False, create_db=False, prep_gtfsdb=True):
         # note: include all ORM objects here, so the db finds them
-        from .stop_segment import StopSegment
-        from .stop_segment_trip import StopSegmentTrip
+        from .segment_stops import SegmentStops
+        from .segment_trips import SegmentTrips
 
         #import pdb; pdb.set_trace()
         if cls.db_singleton is None:
