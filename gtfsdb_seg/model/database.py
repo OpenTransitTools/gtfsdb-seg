@@ -87,6 +87,7 @@ class Database(object):
         # note: include all ORM objects here, so the db finds them
         from .segment_stops import SegmentStops
         from .segment_trips import SegmentTrips
+        from .segment_routes import SegmentRoutes
 
         #import pdb; pdb.set_trace()
         if cls.db_singleton is None:

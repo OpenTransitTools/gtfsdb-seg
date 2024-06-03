@@ -5,7 +5,7 @@ from ott.utils import file_utils
 from ott.utils import exe_utils
 
 from gtfsdb_seg.model.database import Database
-from gtfsdb_seg.model.stop_segment import StopSegment
+from gtfsdb_seg.model.segment_stops import SegmentStops
 
 import logging
 log = logging.getLogger(__file__)
@@ -51,7 +51,7 @@ def load_gtfs_data(cmd_name='bin/load_gtfs_data'):
 
 
     # step 4: output geojson for map
-    geojson = StopSegment.to_geojson(session)
+    geojson = SegmentStops.to_geojson(session)
     dir = "docs"
     file = "segments.geojson"
     file_utils.cat(dir, file, geojson)
@@ -65,18 +65,23 @@ def load_gtfs_data(cmd_name='bin/load_gtfs_data'):
 def segments_to_geojson():
     url, schema = make_db_url_schema(cmd_name='bin/geojson-segments')
     session = Database.make_session(url, schema, is_geospatial=True)
-    geojson = StopSegment.to_geojson(session)
+    geojson = SegmentStops.to_geojson(session)
     print(geojson)
 
 
-def stop_segment():
+def segment_stops():
     from gtfsdb.scripts import get_args
     args, kwargs = get_args()
 
-    session = Database.make_session(args.database_url, args.schema, args.is_geospatial, create_db=True)
-    StopSegment.load(session)
-    session.commit()
-    session.flush()
+    session = Database.make_session(args.database_url, args.schema, create_db=args.create, is_geospatial=True)
+    if args.create:
+        SegmentStops.load(session)
+        session.commit()
+        session.flush()
+
+    if args.print:
+        geojson = SegmentStops.to_geojson(session)
+        print(geojson)
 
 
 def main():
@@ -85,3 +90,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
