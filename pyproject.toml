@@ -16,4 +16,5 @@ psycopg2-binary = "*"
 
 [tool.poetry.scripts]
 segment = "gtfsdb_seg.loader:main"
-stop_segment = "gtfsdb_seg.loader:stop_segment"
+segment_stops = "gtfsdb_seg.loader:segment_stops"
+segment_routes = "gtfsdb_seg.loader:segment_routes"

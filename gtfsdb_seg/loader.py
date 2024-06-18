@@ -6,6 +6,7 @@ from ott.utils import exe_utils
 
 from gtfsdb_seg.model.database import Database
 from gtfsdb_seg.model.segment_stops import SegmentStops
+from gtfsdb_seg.model.segment_routes import SegmentRoutes
 
 import logging
 log = logging.getLogger(__file__)
@@ -76,12 +77,23 @@ def segment_stops():
     session = Database.make_session(args.database_url, args.schema, create_db=args.create, is_geospatial=True)
     if args.create:
         SegmentStops.load(session)
-        session.commit()
-        session.flush()
 
     if args.print:
         geojson = SegmentStops.to_geojson(session)
         print(geojson)
+
+
+def segment_routes():
+    from gtfsdb.scripts import get_args
+    args, kwargs = get_args()
+
+    session = Database.make_session(args.database_url, args.schema, create_db=args.create, is_geospatial=True)
+    if args.create:
+        SegmentStops.load(session)
+    SegmentRoutes.load(session)
+
+    if args.print:
+        pass        
 
 
 def main():

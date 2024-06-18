@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from .base import Base
@@ -15,6 +15,8 @@ class SegmentTrips(Base):
     shape_id = Column(String(255), nullable=False)
     service_id = Column(String(255), nullable=False)
     route_id = Column(String(255), nullable=False)
+    route_id = Column(String(255), nullable=False)
+    route_sort_order = Column(Integer)
     mode = Column(String(255))
 
     ## define relationships
@@ -25,13 +27,18 @@ class SegmentTrips(Base):
         uselist=False, viewonly=True
     )
 
-    """
+    '''
+    sqlalchemy.exc.NoReferencedTableError: Foreign key associated with column 'seg_trips.trip_id' could not find table 'trips' with which to generate a foreign key to target column 'trip_id'
+    sqlalchemy.exc.ArgumentError: Could not locate any relevant foreign key columns for primary join condition 'trimet.trips.trip_id = :trip_id_1' on relationship SegmentTrips.trip.  Ensure that referencing columns are associated with a ForeignKey or ForeignKeyConstraint, or are annotated in the join condition with the foreign() annotation.
+
+    from gtfsdb import Trip
+    #trip_id = Column(String(255), ForeignKey("trips.trip_id"), primary_key=True, nullable=False)
     trip = relationship(
         Trip,
-        primaryjoin='Trip.trip_id==StopSegmentTrip.trip_id',
-        foreign_keys='(StopSegmentTrip.trip_id)',
+        primaryjoin=Trip.trip_id=="SegmentTrips.trip_id",
+        foreign_keys='(SegmentTrips.trip_id)',
         uselist=False, viewonly=True)
-    """
+    '''
 
     def __init__(self, session, segment, trip):
         super(SegmentTrips, self).__init__()
@@ -41,4 +48,5 @@ class SegmentTrips(Base):
         self.shape_id = trip.shape_id
         self.service_id = trip.service_id
         self.route_id = trip.route.route_id
+        self.route_sort_order = trip.route.route_sort_order
         self.mode = trip.route.type.otp_type

@@ -150,7 +150,7 @@ class SegmentStops(Base, PatternBase):
                 from .segment_trips import SegmentTrips
                 printer(" ", do_print=do_print)
                 SegmentTrips.clear_tables(session)
-                cls.clear_tables(session)
+                SegmentStops.clear_tables(session)
 
                 printer("There are {:,} stop to stop segments".format(len(segment_cache)), do_print=do_print)
                 session.add_all(segment_cache.values())
@@ -167,6 +167,9 @@ class SegmentStops(Base, PatternBase):
                         printer('.', end='', flush=True, do_print=do_print)
                         session.bulk_save_objects(chunk)
 
+            # step 4: final write and flush
+            session.commit()
+            session.flush()
         except Exception as e:
             log.exception(e)
 
